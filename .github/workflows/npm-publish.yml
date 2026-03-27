@@ -11,6 +11,10 @@ on:
         description: Run tests before publish
         type: boolean
         default: true
+      run-build:
+        description: Run build before publish
+        type: boolean
+        default: true
     secrets:
       NPM_TOKEN:
         required: true
@@ -36,6 +40,7 @@ jobs:
         run: npm test
 
       - name: Build
+        if: ${{ inputs.run-build }}
         run: npm run build
 
       - name: Version
