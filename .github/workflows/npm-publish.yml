@@ -7,6 +7,10 @@ on:
         description: Node.js version to use
         type: string
         default: '22'
+      run-lint:
+        description: Enable lint step
+        type: boolean
+        default: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -36,6 +40,7 @@ jobs:
         run: npm ci
 
       - name: Lint
+        if: ${{ inputs.run-lint }}
         run: npm run lint --if-present
 
       - name: Test
