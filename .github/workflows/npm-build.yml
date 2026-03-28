@@ -7,10 +7,6 @@ on:
         description: Node.js version to use
         type: string
         default: '22'
-      run-build:
-        description: Run build step
-        type: boolean
-        default: true
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -34,8 +30,7 @@ jobs:
         run: npm run lint --if-present
 
       - name: Build
-        if: ${{ inputs.run-build }}
-        run: npm run build
+        run: npm run build --if-present
 
       - name: Test
         run: npm test --if-present
