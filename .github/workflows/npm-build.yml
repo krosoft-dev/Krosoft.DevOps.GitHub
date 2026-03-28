@@ -7,10 +7,6 @@ on:
         description: Node.js version to use
         type: string
         default: '22'
-      run-tests:
-        description: Run tests after build
-        type: boolean
-        default: true
       run-build:
         description: Run build step
         type: boolean
@@ -34,10 +30,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint --if-present
+
       - name: Build
         if: ${{ inputs.run-build }}
         run: npm run build
 
       - name: Test
-        if: ${{ inputs.run-tests }}
-        run: npm test
+        run: npm test --if-present
