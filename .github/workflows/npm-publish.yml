@@ -6,11 +6,15 @@ on:
       node-version:
         description: Node.js version to use
         type: string
-        default: '22'
+        default: "22"
       run-lint:
         description: Enable lint step
         type: boolean
         default: false
+      run-tests:
+        description: Enable test step
+        type: boolean
+        default: true
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -44,6 +48,7 @@ jobs:
         run: npm run lint --if-present
 
       - name: Test
+        if: ${{ inputs.run-tests }}
         run: npm test --if-present
 
       - name: Build
