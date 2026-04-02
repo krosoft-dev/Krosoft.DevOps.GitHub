@@ -34,8 +34,11 @@ jobs:
           cache: npm
           registry-url: "https://registry.npmjs.org"
 
-      - name: Configure OIDC auth
-        run: sed -i '/_authToken/d' "$NPM_CONFIG_USERCONFIG"
+      - name: Configure npm for OIDC
+        run: echo "registry=https://registry.npmjs.org/" > $NPM_CONFIG_USERCONFIG
+
+      - name: Update npm
+        run: npm install -g npm@10
 
       - name: Install dependencies
         run: npm ci
@@ -64,4 +67,6 @@ jobs:
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Publish ${{ steps.version.outputs.version }}
-        run: npm publish --provenance --access public
+        run: |
+          unset NODE_AUTH_TOKEN
+          npm publish --provenance --access public
