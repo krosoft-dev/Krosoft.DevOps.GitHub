@@ -6,9 +6,13 @@ on:
       node-version:
         description: Node.js version to use
         type: string
-        default: '22'
+        default: "22"
       run-lint:
         description: Enable lint step
+        type: boolean
+        default: false
+      run-tests:
+        description: Enable test step
         type: boolean
         default: true
 
@@ -33,9 +37,6 @@ jobs:
       - name: Configure npm for OIDC
         run: echo "registry=https://registry.npmjs.org/" > $NPM_CONFIG_USERCONFIG
 
-      - name: Update npm
-        run: npm install -g npm@latest
-
       - name: Install dependencies
         run: npm ci
 
@@ -44,6 +45,7 @@ jobs:
         run: npm run lint --if-present
 
       - name: Test
+        if: ${{ inputs.run-tests }}
         run: npm test --if-present
 
       - name: Build

@@ -10,6 +10,10 @@ on:
       run-lint:
         description: Enable lint step
         type: boolean
+        default: false
+      run-tests:
+        description: Enable test step
+        type: boolean
         default: true
 
 env:
@@ -38,4 +42,5 @@ jobs:
         run: npm run build --if-present
 
       - name: Test
+        if: ${{ inputs.run-tests }}
         run: npm test --if-present
