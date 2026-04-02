@@ -69,4 +69,4 @@ jobs:
       - name: Publish ${{ steps.version.outputs.version }}
         run: |
           unset NODE_AUTH_TOKEN
-          npm publish --provenance --access public
+          npm publish --provenance
