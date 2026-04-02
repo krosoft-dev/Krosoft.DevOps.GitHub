@@ -61,4 +61,4 @@ jobs:
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Publish ${{ steps.version.outputs.version }}
-        run: npm publish --provenance
+        run: npm publish --provenance --access public
