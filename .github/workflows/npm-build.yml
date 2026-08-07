@@ -11,6 +11,10 @@ on:
         description: Enable lint step
         type: boolean
         default: false
+      run-type-check:
+        description: Enable type-check step
+        type: boolean
+        default: false
       run-tests:
         description: Enable test step
         type: boolean
@@ -37,6 +41,10 @@ jobs:
       - name: Lint
         if: ${{ inputs.run-lint }}
         run: npm run lint --if-present
+
+      - name: Type-check
+        if: ${{ inputs.run-type-check }}
+        run: npm run type-check --if-present
 
       - name: Build
         run: npm run build --if-present
