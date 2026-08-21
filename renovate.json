@@ -1,7 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "local>krosoft-dev/renovate-config"
-  ],  "assignees": ["krosoft-dev"]
+  "extends": ["github>krosoft-dev/krosoft-tooling-renovate"],
+  "assignees": ["krosoft-dev"]
 }
- 
