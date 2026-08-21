@@ -1,0 +1,37 @@
+name: NPM Storybook
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: Node.js version to use
+        type: string
+        default: '24'
+      script:
+        description: npm script building the Storybook
+        type: string
+        default: 'storybook:build'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  STORYBOOK_DISABLE_TELEMETRY: 1
+
+jobs:
+  storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Storybook
+        env:
+          STORYBOOK_SCRIPT: ${{ inputs.script }}
+        run: npm run "$STORYBOOK_SCRIPT"
