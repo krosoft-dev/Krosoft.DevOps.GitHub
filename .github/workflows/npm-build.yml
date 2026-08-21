@@ -7,6 +7,10 @@ on:
         description: Node.js version to use
         type: string
         default: '24'
+      build-script:
+        description: npm script running the build
+        type: string
+        default: 'build'
       run-lint:
         description: Enable lint step
         type: boolean
@@ -22,6 +26,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  STORYBOOK_DISABLE_TELEMETRY: 1
 
 jobs:
   build:
@@ -47,7 +52,9 @@ jobs:
         run: npm run type-check --if-present
 
       - name: Build
-        run: npm run build --if-present
+        env:
+          BUILD_SCRIPT: ${{ inputs.build-script }}
+        run: npm run --if-present "$BUILD_SCRIPT"
 
       - name: Test
         if: ${{ inputs.run-tests }}
