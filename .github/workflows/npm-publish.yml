@@ -19,6 +19,18 @@ on:
         description: Enable test step
         type: boolean
         default: true
+      deploy-pages:
+        description: Deploy a static build to GitHub Pages once the package is published
+        type: boolean
+        default: false
+      pages-build-script:
+        description: npm script building the site to deploy
+        type: string
+        default: 'storybook:build'
+      pages-path:
+        description: Directory produced by the pages build script
+        type: string
+        default: 'storybook-static'
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -75,3 +87,47 @@ jobs:
         run: |
           unset NODE_AUTH_TOKEN
           npx --yes npm@11 publish --provenance --access public
+
+  # Construire le site APRÈS le publish permet à celui-ci d'afficher la version qui
+  # vient d'être mise en ligne : le numéro n'est connu qu'une fois le publish passé.
+  pages:
+    if: ${{ inputs.deploy-pages }}
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        env:
+          BUILD_SCRIPT: ${{ inputs.pages-build-script }}
+        run: npm run --if-present "$BUILD_SCRIPT"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ inputs.pages-path }}
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
