@@ -16,3 +16,4 @@ to run another one — for instance `storybook:build` to build a Storybook.
 Builds, versions and publishes the package to npm. The version is read from the
 registry and bumped by one patch — it is never committed back, so `package.json`
 stays at its repository value.
+
